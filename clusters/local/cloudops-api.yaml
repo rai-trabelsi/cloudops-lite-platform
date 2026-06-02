@@ -20,15 +20,15 @@ spec:
     spec:
       containers:
         - name: cloudops-api
-          image: cloudops-api:1.0.0
-          imagePullPolicy: Never
+          image: ghcr.io/rai-trabelsi/cloudops-api:1.0.0
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
           env:
             - name: APP_VERSION
               value: "1.0.0"
             - name: APP_ENV
-              value: "local"
+              value: "local-gitops-ci"
           resources:
             requests:
               cpu: "50m"
