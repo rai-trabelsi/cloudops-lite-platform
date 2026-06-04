@@ -5,3 +5,4 @@ resources:
   - cloudops-api.yaml
   - cloudops-api-ingress.yaml
   - grafana-ingress.yaml
+  - cloudops-api-servicemonitor.yaml
