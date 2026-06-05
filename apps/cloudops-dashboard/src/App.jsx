@@ -1,122 +1,222 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useEffect, useState } from "react";
+import "./App.css";
+
+const API_BASE = "http://cloudops.local";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [health, setHealth] = useState(null);
+  const [version, setVersion] = useState(null);
+  const [status, setStatus] = useState(null);
+  const [lastUpdated, setLastUpdated] = useState("");
+
+  const loadData = async () => {
+    try {
+      const [healthRes, versionRes, statusRes] = await Promise.all([
+        fetch(`${API_BASE}/health`),
+        fetch(`${API_BASE}/version`),
+        fetch(`${API_BASE}/status`),
+      ]);
+
+      setHealth(await healthRes.json());
+      setVersion(await versionRes.json());
+      setStatus(await statusRes.json());
+      setLastUpdated(new Date().toLocaleTimeString());
+    } catch (error) {
+      setHealth({
+        status: "unreachable",
+        service: "cloudops-api",
+      });
+
+      setVersion({
+        version: "unknown",
+        environment: "unknown",
+        hostname: "unknown",
+      });
+
+      setStatus({
+        platform: "CloudOps Lite Platform",
+        service: "cloudops-api",
+        environment: "unknown",
+        uptime_seconds: 0,
+        kubernetes: false,
+      });
+
+      setLastUpdated(new Date().toLocaleTimeString());
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+    const interval = setInterval(loadData, 10000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const isHealthy = health?.status === "healthy";
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
+    <div className="page">
+      <div className="background-glow glow-one"></div>
+      <div className="background-glow glow-two"></div>
+
+      <header className="hero">
         <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
+          <p className="eyebrow">Production-inspired local platform</p>
+          <h1>CloudOps Lite Dashboard</h1>
+          <p className="subtitle">
+            A lightweight Kubernetes platform with GitOps, CI/CD, monitoring,
+            container registry integration, and secure deployment workflows.
           </p>
         </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+        <div className={`status-pill ${isHealthy ? "healthy" : "danger"}`}>
+          <span></span>
+          {isHealthy ? "API Healthy" : "API Unreachable"}
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
+      </header>
+
+      <section className="cards-grid">
+        <div className="card highlight">
+          <p className="card-label">API Health</p>
+          <h2>{health?.status || "loading"}</h2>
+          <p>{health?.service || "cloudops-api"}</p>
+        </div>
+
+        <div className="card">
+          <p className="card-label">Environment</p>
+          <h2>{version?.environment || "loading"}</h2>
+          <p>GitOps controlled deployment</p>
+        </div>
+
+        <div className="card">
+          <p className="card-label">Version</p>
+          <h2>{version?.version || "loading"}</h2>
+          <p>Image deployed from GHCR</p>
+        </div>
+
+        <div className="card">
+          <p className="card-label">Pod Hostname</p>
+          <h2 className="small-text">{version?.hostname || "loading"}</h2>
+          <p>Kubernetes workload identity</p>
         </div>
       </section>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      <section className="main-grid">
+        <div className="panel large">
+          <div className="panel-header">
+            <div>
+              <p className="eyebrow">Platform architecture</p>
+              <h3>CloudOps delivery workflow</h3>
+            </div>
+            <span className="badge">Live</span>
+          </div>
+
+          <div className="pipeline">
+            <div className="pipeline-step">
+              <span>01</span>
+              <strong>Code Push</strong>
+              <p>
+                Developer pushes application or infrastructure changes to GitHub.
+              </p>
+            </div>
+
+            <div className="pipeline-arrow">→</div>
+
+            <div className="pipeline-step">
+              <span>02</span>
+              <strong>CI/CD</strong>
+              <p>
+                GitHub Actions builds Docker images and publishes them to GHCR.
+              </p>
+            </div>
+
+            <div className="pipeline-arrow">→</div>
+
+            <div className="pipeline-step">
+              <span>03</span>
+              <strong>GitOps</strong>
+              <p>
+                Flux CD reconciles Kubernetes manifests from the Git repository.
+              </p>
+            </div>
+
+            <div className="pipeline-arrow">→</div>
+
+            <div className="pipeline-step">
+              <span>04</span>
+              <strong>k3s Runtime</strong>
+              <p>
+                Traefik exposes services while Prometheus and Grafana monitor the
+                platform.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="panel">
+          <p className="eyebrow">Runtime</p>
+          <h3>Service status</h3>
+
+          <ul className="status-list">
+            <li>
+              <span className="dot healthy-dot"></span>
+              FastAPI backend
+            </li>
+            <li>
+              <span className="dot healthy-dot"></span>
+              Kubernetes service
+            </li>
+            <li>
+              <span className="dot healthy-dot"></span>
+              Traefik ingress
+            </li>
+            <li>
+              <span className="dot healthy-dot"></span>
+              Prometheus metrics
+            </li>
+            <li>
+              <span className="dot healthy-dot"></span>
+              Grafana dashboards
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section className="stack-section">
+        <div className="panel">
+          <p className="eyebrow">Infrastructure stack</p>
+          <h3>Technologies used</h3>
+
+          <div className="tech-grid">
+            <span>Ubuntu Server</span>
+            <span>k3s</span>
+            <span>Docker</span>
+            <span>GitHub Actions</span>
+            <span>GHCR</span>
+            <span>Flux CD</span>
+            <span>Traefik</span>
+            <span>Prometheus</span>
+            <span>Grafana</span>
+            <span>FastAPI</span>
+            <span>React</span>
+            <span>Vite</span>
+          </div>
+        </div>
+
+        <div className="panel">
+          <p className="eyebrow">Live refresh</p>
+          <h3>{lastUpdated || "loading"}</h3>
+          <p className="muted">
+            The dashboard refreshes every 10 seconds and reads live data from the
+            CloudOps backend API.
+          </p>
+
+          <p className="muted">
+            Platform: {status?.platform || "CloudOps Lite Platform"}
+          </p>
+        </div>
+      </section>
+    </div>
+  );
 }
 
-export default App
+export default App;
