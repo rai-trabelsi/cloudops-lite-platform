@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Response
+from fastapi.middleware.cors import CORSMiddleware
 from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
 import socket
 import os
@@ -8,6 +9,17 @@ app = FastAPI(
     title="CloudOps Lite API",
     description="A lightweight CloudOps API for Kubernetes, GitOps, CI/CD and monitoring demos.",
     version="1.0.0"
+)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://cloudops.local",
+        "http://dashboard.cloudops.local",
+        "http://192.168.1.13:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 REQUEST_COUNT = Counter(
