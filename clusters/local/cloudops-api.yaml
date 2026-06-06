@@ -8,6 +8,8 @@ kind: Deployment
 metadata:
   name: cloudops-api
   namespace: apps
+  labels:
+    app: cloudops-api
 spec:
   replicas: 1
   selector:
@@ -18,17 +20,29 @@ spec:
       labels:
         app: cloudops-api
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
       containers:
         - name: cloudops-api
           image: ghcr.io/rai-trabelsi/cloudops-api:1.0.0
           imagePullPolicy: Always
           ports:
-            - containerPort: 8000
+            - name: http
+              containerPort: 8000
           env:
             - name: APP_VERSION
               value: "1.0.0"
             - name: APP_ENV
               value: "local-gitops-ci"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop:
+                - ALL
           resources:
             requests:
               cpu: "50m"
@@ -42,10 +56,13 @@ kind: Service
 metadata:
   name: cloudops-api-service
   namespace: apps
+  labels:
+    app: cloudops-api
 spec:
   selector:
     app: cloudops-api
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: 80
       targetPort: 8000
