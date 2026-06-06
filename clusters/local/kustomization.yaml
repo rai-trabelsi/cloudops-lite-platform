@@ -8,3 +8,4 @@ resources:
   - cloudops-api-servicemonitor.yaml
   - cloudops-dashboard.yaml
   - cloudops-dashboard-ingress.yaml
+  - apps-networkpolicy.yaml
