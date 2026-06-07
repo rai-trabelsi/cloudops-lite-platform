@@ -5,3 +5,10 @@ __pycache__/
 .env
 .kube/
 .DS_Store
+# Terraform
+terraform.tfvars
+*.tfstate
+*.tfstate.*
+.terraform/
+crash.log
+crash.*.log

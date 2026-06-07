@@ -1,0 +1,21 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+
+packages:
+  - curl
+  - git
+  - ufw
+  - htop
+  - jq
+  - ca-certificates
+
+runcmd:
+  - ufw allow OpenSSH
+  - ufw allow 80/tcp
+  - ufw allow 443/tcp
+  - ufw --force enable
+  - curl -sfL https://get.k3s.io | sh -
+  - mkdir -p /root/.kube
+  - cp /etc/rancher/k3s/k3s.yaml /root/.kube/config
+  - echo "CloudOps Lite k3s node provisioned successfully" > /root/cloudops-provisioned.txt
