@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudops-dashboard
+  namespace: apps
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloudops-dashboard
+  template:
+    metadata:
+      labels:
+        app: cloudops-dashboard
+    spec:
+      containers:
+        - name: cloudops-dashboard
+          image: ghcr.io/rai-trabelsi/cloudops-dashboard:1.0.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloudops-dashboard-service
+  namespace: apps
+  labels:
+    app: cloudops-dashboard
+spec:
+  selector:
+    app: cloudops-dashboard
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
