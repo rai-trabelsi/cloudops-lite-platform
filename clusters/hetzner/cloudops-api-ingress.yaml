@@ -5,7 +5,7 @@ metadata:
   namespace: apps
 spec:
   rules:
-    - host: cloudops.local
+    - host: api.cloudops-demo.local
       http:
         paths:
           - path: /
