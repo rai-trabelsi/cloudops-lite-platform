@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 
-const API_BASE = "http://cloudops.local";
+const API_BASE = "http://api.cloudops-demo.local";
 
 function App() {
   const [health, setHealth] = useState(null);
