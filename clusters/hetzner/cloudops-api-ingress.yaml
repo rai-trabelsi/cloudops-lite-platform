@@ -4,8 +4,19 @@ metadata:
   name: cloudops-api-ingress
   namespace: apps
 spec:
+  ingressClassName: traefik
   rules:
     - host: api.cloudops-demo.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: cloudops-api-service
+                port:
+                  number: 80
+    - host: cloudops.local
       http:
         paths:
           - path: /
