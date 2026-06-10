@@ -16,6 +16,7 @@ app.add_middleware(
         "http://cloudops.local",
         "http://dashboard.cloudops.local",
         "http://192.168.1.13:5173",
+        "http://dashboard.cloudops-demo.local",
     ],
     allow_credentials=True,
     allow_methods=["*"],
