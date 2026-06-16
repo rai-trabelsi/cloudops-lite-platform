@@ -123,7 +123,7 @@ Shows the monitoring stack pods deployed in the cluster.
 
 Custom dashboard showing platform status, cluster information, API health, Prometheus, and Grafana status.
 
-![Dashboard Overview](docs/screenshots/dashboard-overview.jpeg)
+![Dashboard Overview](docs/screenshots/Dashboard-Overview.jpeg)
 
 ---
 
