@@ -107,50 +107,27 @@ Grafana
 
 ---
 
-## Repository Structure
-
-```text
+Project Structure
 cloudops-lite-platform/
 ├── apps/
-│   ├── cloudops-api/
-│   │   ├── main.py
-│   │   ├── Dockerfile
-│   │   └── requirements.txt
-│   │
-│   └── cloudops-dashboard/
-│       ├── src/
+│   └── cloudops-api/
+│       ├── main.py
 │       ├── Dockerfile
-│       └── package.json
-│
+│       └── requirements.txt
 ├── clusters/
-│   ├── local/
-│   │   └── local Kubernetes manifests
-│   │
 │   └── hetzner/
-│       ├── cloudops-api.yaml
-│       ├── cloudops-api-ingress.yaml
-│       ├── cloudops-dashboard.yaml
-│       ├── cloudops-dashboard-ingress.yaml
-│       └── kustomization.yaml
-│
-├── terraform/
-│   └── hetzner/
-│       ├── provider.tf
-│       ├── server.tf
-│       ├── firewall.tf
-│       ├── variables.tf
-│       ├── outputs.tf
-│       └── cloud-init.yaml
-│
-├── .github/
-│   └── workflows/
-│       ├── ci-cloudops-api.yml
-│       └── ci-cloudops-dashboard.yml
-│
+│       └── manifests/
+├── infra/
+│   └── terraform/
 ├── docs/
-│   ├── screenshots/
-│   └── videos/
-│
+│   └── screenshots/
+│       ├── kubernetes-pods.jpeg
+│       ├── flux-workflow.jpeg
+│       ├── monitoring-pods.jpeg
+│       ├── dashboard-overview.jpeg
+│       ├── api-metrics.jpeg
+│       ├── grafana-dashboard.jpeg
+│       └── terraform-tree.jpeg
 └── README.md
 ```
 
@@ -392,37 +369,6 @@ This provides a reproducible infrastructure foundation for future cloud provisio
 
 ---
 
-## Screenshots
-
-
-
-```text
-docs/screenshots/
-├── 01-hetzner-server-overview.png
-├── 02-hetzner-firewall-rules.png
-├── 03-kubernetes-node-ready.png
-├── 04-kubernetes-all-pods.png
-├── 05-apps-ingress.png
-├── 06-flux-git-source.png
-├── 07-flux-kustomization.png
-├── 08-dashboard-main.png
-├── 09-api-health.png
-├── 10-api-metrics.png
-├── 11-github-actions-green.png
-├── 12-ghcr-packages.png
-├── 13-grafana-dashboard.png
-└── 14-prometheus-api-metric.png
-```
-
-Example placeholders:
-
-```markdown
-![Dashboard](docs/screenshots/08-dashboard-main.png)
-
-![Kubernetes Pods](docs/screenshots/04-kubernetes-all-pods.png)
-
-![Grafana Dashboard](docs/screenshots/13-grafana-dashboard.png)
-```
 
 ---
 
